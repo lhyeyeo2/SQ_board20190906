@@ -1,3 +1,6 @@
+https://yetdefined.tistory.com/31
+
+
 create table sqboard (
 seq number(5) primary key,
 title varchar2(200),
@@ -11,11 +14,17 @@ cnt number(5) default 0
 
 
 //pom.xml
+후자 중에서 전자 선택
+<!-- 스프링에서 JDBC 를 사용하기 위한 라이브러리 입니다. -->
+<dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-jdbc</artifactId>
+   <version>${org.springframework-version}</version>
+</dependency>
 
 
 
-
-
+<참고>
 <!-- 오라클 JDBC 드라이버를 가져오기 위해 리포지토리를 추가합니다. -->
 <repositories>
   <repository>
@@ -57,3 +66,108 @@ cnt number(5) default 0
 	<artifactId>mybatis-spring</artifactId>
 	<version>1.3.0</version>
 </dependency>
+
+
+
+20190909 월요일
+1시간 이상 지각, 스프링 교재 다르고, 단어도 모르고, 전에 게시판도 몰라서 기초?비슷한것? 도 모름.
+com.springbook.biz.common.JDBCUtil.java
+(-)1도 모름
+
+BoardDAO.java
+// 글 목록 조회 select
+	public List<BoardVO> getBoard(BoardVO vo) {
+		System.out.println("-->JDBC getBoard() 기능 처리");
+		// (-) = new 한이유 메모리 관련. 응? 반복문이 끝나면 new... 소멸함.
+	List<BoardVO> boardList = new ArrayList<BoardVO>();
+		try {
+			conn = JDBCUtil.getConnection();
+			stmt = conn.prepareStatement(BOARD_LIST);
+			stmt.setInt(1, vo.getSeq());
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				BoardVO board = new BoardVO();
+				board.setSeq(rs.getInt("SEQ"));
+				board.setTitle(rs.getString("TITLE"));
+				board.setWriter(rs.getString("Writer"));
+				board.setContent(rs.getString("content"));
+				board.setRegDate(rs.getDate("regdate"));
+				board.setCnt(rs.getInt("cnt"));
+				boardList.add(board);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JDBCUtil.close(rs, stmt, conn);
+		}
+		return boardList;
+	}
+	
+	
+	
+	
+	
+//<com.springbook.biz.board.impl.BoardServiceImpl.java>
+package com.springbook.biz.board.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.springbook.biz.board.BoardService;
+import com.springbook.biz.board.BoardVO;
+
+public class BoardServiceImpl implements BoardService {
+	@Autowired
+	private BoardDAO boardDAO;
+	
+	public void insertBoard(BoardVO vo) {
+		boardDAO.insertBoard(vo);
+	}
+	public void updateBoard(BoardVO vo){
+		boardDAO.updateBoard(vo);
+	}
+	public void deleteBoard(BoardVO vo){
+		boardDAO.deleteBoard(vo);
+	}
+	public BoardVO getBoard(BoardVO vo){
+		return boardDAO.getBoard(vo);
+	}
+	public List<BoardVO> getBoardList(BoardVO vo){
+		return boardDAO.getBoardList(vo);
+	}
+}
+
+	
+}
+
+
+
+
+
+
+//<DAO.java>
+//@component(), @Repository() 중에서 @Repository씀
+(-)@component는 두루 쓸수 있음.
+(-)while(rs.next())
+//패턴 <BoardServiceImpl.java>
+(-)@service 
+
+
+
+
+
+//<com.springbook.biz.board.BoardService.java
+/(-)/interface
+package com.springbook.biz.board;
+
+import java.util.List;
+public interface BoardService {
+	void insertBoard(BoardVO vo);
+	void updateBoard(BoardVO vo);
+	void deleteBoard(BoardVO vo);
+	BoardVO getBoard(BoardVO vo);
+	List<BoardVO> getBoardList(BoardVO vo);
+	
+
+}
