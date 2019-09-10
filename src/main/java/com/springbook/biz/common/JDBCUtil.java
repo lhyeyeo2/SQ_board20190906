@@ -13,7 +13,7 @@ public class JDBCUtil {
 	public void testConnection() throws Exception {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "system", "1111");
+			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "scott", "tiger");
 			//System.out.println("오라클연결완료");
 			String sql="INSERT INTO SQBOARD (SEQ, TITLE, WRITER, CONTENT) "
 					 +  " VALUES((SELECT NVL(MAX(SEQ), 0)+1 FROM SQBOARD), 'aaa', 'aaa', 'aaa')";

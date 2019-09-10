@@ -1,4 +1,4 @@
-https://yetdefined.tistory.com/31
+﻿https://yetdefined.tistory.com/31
 
 
 create table sqboard (
@@ -171,3 +171,64 @@ public interface BoardService {
 	
 
 }
+
+
+
+
+
+
+//<com.springbook.biz.board.impl.BoardServiceImpl.java
+package com.springbook.biz.board.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.springbook.biz.board.BoardService;
+import com.springbook.biz.board.BoardVO;
+
+@Service("boardService")
+public class BoardServiceImpl implements BoardService {
+	@Autowired
+	private BoardDAO boardDAO;
+	
+	public void insertBoard(BoardVO vo) {
+		boardDAO.insertBoard(vo);
+	}
+	public void updateBoard(BoardVO vo){
+		boardDAO.updateBoard(vo);
+	}
+	public void deleteBoard(BoardVO vo){
+		boardDAO.deleteBoard(vo);
+	}
+	public BoardVO getBoard(BoardVO vo){
+		return boardDAO.getBoard(vo);
+	}
+	public List<BoardVO> getBoardList(BoardVO vo){
+		return boardDAO.getBoardList(vo);
+	}
+}
+
+
+
+
+
+16:00//<applicationContext.xml 생성방법
+(-)물어보기
+Spring  contest file 생성
+new-Spring Bean Configuration file-
+ 1.p
+ 2.xsi(-)
+ 3.context(-)
+
+16:00 ???context지우셨는데 어디서 나온 거임?
+
+
+
+
+
+
+블로그의 다음페이지
+service...를 즉 두개의 연결 시켜서
+
