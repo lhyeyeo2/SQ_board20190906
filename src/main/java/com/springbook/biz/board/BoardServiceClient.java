@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
-
+//MOVE했더니 에러발생으로 처음자리 갔다가 다시 돌아옴.
+//
+//src/test/java/.com...
 public class BoardServiceClient {
 	public static void main(String[] args) {
 		//1. Spring 컨테이너를 구동한다.

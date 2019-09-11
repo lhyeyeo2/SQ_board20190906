@@ -51,6 +51,12 @@
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
 		</dependency>	
+	<!-- AOP aspectjweaver	 -->
+<dependency>
+   <groupId>org.aspectj</groupId>
+   <artifactId>aspectjweaver</artifactId>
+   <version>1.8.1</version>
+</dependency>
 		
 		<!-- Logging -->
 		<dependency>

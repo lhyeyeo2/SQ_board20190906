@@ -249,3 +249,277 @@ UserDAO UserDAO
 getUser(vo: userVO )UserVO  <-------------------com..
 						getUser(vo: UserVO):UserVO
 
+
+
+==================================================
+20190911
+10:00(-) 공책에서 불러오기
+
+
+
+
+
+package com.springbook.biz.board.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.springbook.biz.board.BoardService;
+import com.springbook.biz.board.BoardVO;
+
+@Service()
+public class BoardServiceImpl implements BoardService {  //BoardService 에서 상속받아
+	@Autowired
+	private BoardDAO boardDAO;
+	
+	public void insertBoard(BoardVO vo) {
+		boardDAO.insertBoard(vo);		
+	}
+	public void updateBoard(BoardVO vo) {
+		boardDAO.updateBoard(vo);
+	}
+	public void deleteBoard(BoardVO vo) {		
+	}
+	public BoardVO getBoard(BoardVO vo) {
+		return boardDAO.getBoard(vo);
+	}
+	public List<BoardVO> getBoardList(BoardVO vo) {
+		return boardDAO.getBoardList(vo);
+	}
+
+}
+
+
+
+
+
+
+(-)//<com.springbook.biz.user.impl.UserServiceImpl.java;
+package com.springbook.biz.user.impl
+import java.util.List;
+
+@Service("boardService")
+public class UserServiceImpl {
+//@Autowired
+	private UserDAO userDAO;
+	
+	public UserServiceImpl(UserDAO u)
+	}	
+
+
+
+
+
+(-)//<src/test/java/com.springbook.biz.user.UserServiceClient
+.com.springbook.biz.user
+
+
+
+
+
+
+
+(-)src/test/java 로 com.springbook.biz.board.BoardServiceClient.java refector해서 move하기
+
+
+
+
+
+
+(-)//>UserDAO.java   이후 (-)UserService.java에도 인터페이스를 넣습니다.
+@Repository("userDAO")
+public class UserDAO {
+	// JDBC
+	private Connection conn = null;
+	private PreparedStatement stmt = null;
+	private ResultSet rs = null;
+
+	// SQL
+	private final String USER_GET = "select * from SQUSERS where id=? and password=?";
+	private final String USER_ADD = "insert into SQUSERS (id,password,name,role)"
+			+ " values(?,?,?,?)";
+
+	public void addUser(UserVO vo) {
+		System.out.println("-->JDBC addUser() 기능 처리");
+		try {
+			conn=JDBCUtil.getConnection();
+			stmt = conn.prepareStatement(USER_ADD);
+			stmt.setString(1, vo.getId());
+			stmt.setString(2, vo.getPassword());
+			stmt.setString(3, vo.getName());
+			stmt.setString(4, vo.getRole());
+			stmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JDBCUtil.close(stmt, conn);
+		}
+
+
+
+(-)UserServiceImpl.java
+
+
+
+(-)//순서모름com.springbook.biz.common.Log4jAdvice.java
+package com.springbook.biz.common;
+
+public class Log4jAdvice {
+public void printLogging() {
+	System.out.println("[common log4j] 비즈니스 로직 수행 ");
+	
+}
+}
+
+
+
+(-)딜리트 업데이트 기능 만들기
+
+(-)로그(로긴 기능)
+객체지향언어라. 공통적으로 
+
+
+(-)if (user != null) 이 무슨뜻에서 왜 쓰임?
+
+
+
+
+
+
+
+(-)//<UserServiceClient.java
+
+package com.springbook.biz.user;
+
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class UserServiceClient {
+	public static void main(String[] args) {
+		// 1. Spring 컨테이너를 구동한다.
+		AbstractApplicationContext container = new GenericXmlApplicationContext("applicationContext.xml");
+		
+		// 2. Spring 컨테이너로부터 UserServiceImpl 객체를 Lookup 한다.
+		UserService userService = (UserService)container.getBean("userService");
+		
+		// 3.  회원 등록 기능 테스트
+		UserVO vo = new UserVO();
+		vo.setId("bbbid");
+		vo.setPassword("bbbpwd");
+		vo.setName("bbbname");
+		vo.setRole("brole");
+		userService.addUser(vo);
+		System.out.println("회원등록 완료");
+		
+		// 3.  로그인 기능 테스트
+		//UserVO vo = new UserVO();
+		vo.setId("aaaid");
+		vo.setPassword("aaapwd");
+		UserVO user = userService.getUser(vo);
+		if(user!=null) {
+			System.out.println("[msg]" + user.getName() + "님 환영합니다.");
+			System.out.println(user.toString());
+		} else {
+			System.out.println("[high] 로그인실패");
+		}
+				
+		// 4. Spring 컨테이너 종료
+		container.close();
+
+
+(-)12:30 뭘하라는데 메모도  안하고 안해버림 딜리트 업데이트 기능 만들기였나
+
+ 
+
+
+
+
+
+
+//(+)BoardServiceImpl.java //덜침
+public BoardServiceImpl() {
+ log...로
+ }
+
+
+//(+)applicationContext.xml  //덜침
+//<aop:config>.... 인듯
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<context:component-scan base-package="com.springbook.biz" />
+	
+	<bean id="log" class="com.springbook.biz.common.LogAdvice"></bean>
+	<bean id="log4j" class="com.springbook.biz.common.Log4jAdvice"></bean>
+	<aop:config>
+		<aop:pointcut id="allPointcut"
+			expression="execution(* com.springbook..impl.*Impl.*(..))" />
+		<aop:pointcut id="getPointcut"
+			expression="execution(* com.springbook.biz..*Impl.get*(..))" />
+		<aop:aspect ref="log">
+			<aop:before pointcut-ref="getPointcut" method="printLog" />
+		</aop:aspect>
+	</aop:config>
+	
+	
+<!-- 	<bean id="userService" class="com.springbook.biz.user.impl.UserServiceImpl">
+		<property name="userDAO" ref="userDAO" />
+	</bean>
+	<bean id="userDAO" class="com.springbook.biz.user.impl.UserDAO"/> -->
+	
+</beans>
+
+
+
+//<applicationContext.xml 
+(-)allpoint...밑에 getpoint 추가
+
+
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+(-)///다 모르겠으니 reset
+
+?> getPointcut
+쓰루잉으로 예외처리를 볼수 있다.
+(-)목표: 이 시간에 예외처리를 알아야한다.
+//<boardservice...Impl.java
+//eg) aop 사용을 하고 있다. before와 after 마크가 다르다.
+
+
+
+//pom.xml <!-- AOP aspectjweaver	삽입하거감 -->
+후자를
+<!-- AspectJ -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${org.aspectj-version}</version>
+		</dependency>	
+<!-- AOP aspectjweaver	 -->
+<dependency>
+   <groupId>org.aspectj</groupId>
+   <artifactId>aspectjweaver</artifactId>
+   <version>1.8.1</version>
+</dependency>
+
+중에서 
+
+<!-- AOP aspectjweaver	 -->
+<dependency>
+   <groupId>org.aspectj</groupId>
+   <artifactId>aspectjweaver</artifactId>
+   <version>1.8.1</version>
+</dependency>
+
