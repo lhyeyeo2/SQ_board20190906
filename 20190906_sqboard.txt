@@ -229,6 +229,23 @@ new-Spring Bean Configuration file-
 
 
 
-블로그의 다음페이지
+//<블로그의 다음페이지
 service...를 즉 두개의 연결 시켜서
+- ? -userserviceimp...로 완성됨.
+
+자세히. UserVO - UserDAO 
+BEST는 
+
+
+
+
+
+interface (class아님요)
+//로 UserVO? 생성
+
+eg) com.
+-------------
+UserDAO UserDAO
+getUser(vo: userVO )UserVO  <-------------------com..
+						getUser(vo: UserVO):UserVO
 
